@@ -27,6 +27,10 @@ module Amazon
           @messages.flatten.each_with_index do |message,i|
             ordered_message = ActiveSupport::OrderedHash.new
             ordered_message["MessageID"] = i + 1 if message[:MessageID].nil?
+            if !message['OperationType'].blank?
+              #make sure OperationType is before our message payload
+              ordered_message['OperationType'] = message.delete('OperationType')
+            end
             ordered_message.merge!(message)
             render_message(ordered_message, @params)                      
           end
