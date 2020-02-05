@@ -22,24 +22,6 @@ class String
   end
 =end
 
-  # By default, +camelize+ converts strings to UpperCamelCase. If the argument to +camelize+
-  # is set to <tt>:lower</tt> then +camelize+ produces lowerCamelCase.
-  #
-  # +camelize+ will also convert '/' to '::' which is useful for converting paths to namespaces.
-  #
-  # Examples:
-  #   "active_record".camelize                # => "ActiveRecord"
-  #   "active_record".camelize(:lower)        # => "activeRecord"
-  #   "active_record/errors".camelize         # => "ActiveRecord::Errors"
-  #   "active_record/errors".camelize(:lower) # => "activeRecord::Errors"
-  def camelize(first_letter_in_uppercase = true)
-    if first_letter_in_uppercase
-      self.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }
-    else
-      self.to_s.first.downcase + camelize(lower_case_and_underscored_word)[1..-1]
-    end
-  end
-
 =begin
   def underscore
     self.gsub(/::/, '/').
@@ -52,17 +34,17 @@ class String
 end
 
 class Hash
-  
+
 =begin
   def self.from_query_string(string)
     query = string.split(/\?/)[-1]
     parts = query.split(/&|=/)
     Hash[*parts]
   end
-  
+
   def to_query_string
     self.map { |k,v| "%s=%s" % [URI.encode(k.to_s), URI.encode(v.to_s)] }.join('&') unless self.empty?
-  end  
+  end
 =end
 
   #take keys of hash and transform those to a symbols

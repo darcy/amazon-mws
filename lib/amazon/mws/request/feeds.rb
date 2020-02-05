@@ -67,15 +67,19 @@ module Amazon
         result = SubmitFeedResponse.format(response)
       end
 
+      def normalize str
+        str.to_s.gsub(/\/(.?)/) { "::#{$1.upcase}" }.gsub(/(?:^|_)(.)/) { $1.upcase }
+      end
+
       # params can contain {:purge => true and marketplace id list }
       def submit_feed(feed_type, message_type, messages = [], params = {})
-        message_type= message_type.to_s.camelize
+        message_type= normalize(message_type)
         raise InvalidMessageType if !MESSAGE_TYPES.include?(message_type)
         raise "Missing merchant_id" unless @merchant_id
-        
+
         body = Amazon::MWS::FeedBuilder.new(message_type, messages, params.merge({:merchant_id => @merchant_id})).render
         puts body if Amazon::MWS::Base.debug
-        
+
         response =
           post("/", {
           "Action"   => "SubmitFeed",
